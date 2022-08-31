@@ -1,70 +1,91 @@
 import { Request, Response } from "express";
 import { Personaje } from '../db/models/personaje';
+import Entretenimiento from '../db/models/entretenimiento';
+import { PeliculaPersonaje } from '../db/models/pelicula_personaje';
 
-export const getCharacters = async (req:Request, res:Response)=>{
+//* ALL CHARACTERS
+export const getCharacters = async (req: Request, res: Response) => {
 
-    const characters = await Personaje.findAll({
-        attributes:['nombre', 'imagen']
-    });
+    const personajes = await Personaje.findAll({
+        attributes: ['nombre', 'imagen'],
+        where: { activo: 1 }
+    })
 
-    if(!characters){
+    if (!personajes) {
         return res.status(400).json({
-            msg:'No hay personajes aún'
+            msg: 'No hay personajes aún'
         })
     }
 
     res.status(200).json({
-        characters
+        personajes
     })
 }
 
-export const postCharacter = async (req:Request, res:Response)=>{
-    
-    const {nombre, imagen, edad, peso, historia} = req.body;
+//* CREATE CHARACTER
+export const postCharacter = async (req: Request, res: Response) => {
+
+    const nameMovie = req.query.titulo || '';
+
+    const movie = await Entretenimiento.findByPk(nameMovie);
+
+    if (!movie) {
+        return res.status(400).json({
+            msg: `No existe una pelicula con nombre ${nameMovie} - debes crearla primero para agregar personajes`
+        })
+    }
+
+    const { nombre, imagen, edad, peso, historia, entretenimientoTitulo } = req.body;
 
     try {
 
         //* VALIDO SI ESE PERSONAJE YA EXISTE EN BD
         const existe = await Personaje.findByPk(nombre);
-        if(existe){
+        if (existe) {
             return res.status(400).json({
-                msg:`El personaje ${nombre} ya esta registrado`
+                msg: `El personaje ${nombre} ya esta registrado`
             })
         }
 
         nombre.toLowerCase();
         const personaje = await Personaje.create({
-            nombre, imagen, edad, peso, historia
+            nombre, imagen, edad, peso, historia, entretenimientoTitulo
         });
 
-        res.json({
-            personaje
+        const association = await PeliculaPersonaje.create({
+            PersonajeNombre: nombre,
+            entretenimientoTitulo: movie.titulo.trim()
         })
-        
+
+        res.json({
+            personaje,
+            association
+        })
+
     } catch (error) {
         console.log(error);
         res.status(400).json({
-            msg:error
+            msg: error
         })
     }
 }
 
+//* UPDATE ONE CHARACTER
+export const putCharacter = async (req: Request, res: Response) => {
 
-export const putCharacter = async (req:Request, res:Response)=>{
-
-    const {nombre} = req.params;
-    const {imagen, peso, historia, edad} = req.body;
+    const { nombre } = req.params;
+    const { imagen, peso, historia, edad } = req.body;
 
     const existe = await Personaje.findByPk(nombre.toLowerCase());
-    if(!existe){
+    if (!existe) {
         return res.status(400).json({
-            msg:`El personaje ${nombre} no existe`
+            msg: `El personaje ${nombre} no existe`
         })
     }
 
     const personaje = await Personaje.update(
-        {imagen, peso, historia, edad},
-        {where:{nombre}}
+        { imagen, peso, historia, edad },
+        { where: { nombre } }
     );
 
     res.status(200).json({
@@ -72,20 +93,21 @@ export const putCharacter = async (req:Request, res:Response)=>{
     })
 }
 
-export const deleteCharacter = async (req:Request, res:Response)=>{
-    const {nombre} = req.params;
+//* UPDATE ONE CHARACTER
+export const deleteCharacter = async (req: Request, res: Response) => {
+    const { nombre } = req.params;
 
     const existe = await Personaje.findByPk(nombre.toLowerCase());
 
-    if(!existe){
+    if (!existe) {
         return res.status(400).json({
-            msg:`El personaje ${nombre} no existe`
+            msg: `El personaje ${nombre} no existe`
         })
     }
 
     const personaje = await Personaje.update(
-        {activo:0},
-        {where:{nombre}}
+        { activo: 0 },
+        { where: { nombre } }
     );
 
     res.status(200).json({
@@ -93,4 +115,81 @@ export const deleteCharacter = async (req:Request, res:Response)=>{
     })
 }
 
-// module.exports = { getCharacters }
+//* GET ONE CHARACTER
+export const getCharacter = async (req: Request, res: Response) => {
+
+    console.log(req.params.nombre);
+
+    try {
+        const personaje = await Personaje.findByPk(req.params.nombre,
+            {
+                include: {
+                    model: Entretenimiento,
+                    through: {
+                        attributes: []
+                    }
+                }
+            })
+
+
+        if (!personaje) {
+            return res.status(400).json({
+                msg: 'No hay personajes aún'
+            })
+        }
+
+        res.status(200).json({
+            personaje
+        })
+    } catch (error) {
+        console.log(error);
+        res.json({
+            error
+        })
+    }
+
+}
+
+//* GET DETAILS ONE CHARACTER
+export const getDetailsCharacters = async (req: Request, res: Response) => {
+
+    console.log(req.params.nombre);
+
+    try {
+        const personaje = await Personaje.findAll({
+            include: {
+                model: Entretenimiento,
+                through: {
+                    attributes: []
+                }
+            }
+        })
+
+
+        if (!personaje) {
+            return res.status(400).json({
+                msg: 'No hay personajes aún'
+            })
+        }
+
+        res.status(200).json({
+            personaje
+        })
+    } catch (error) {
+        console.log(error);
+        res.json({
+            error
+        })
+    }
+
+}
+
+
+export const searchCharacter = async (req: Request, res: Response)=>{
+
+    const {name, age, movie} = req.query;
+
+    const character = await Personaje.findOne({
+        where:{nombre:name}
+    })
+}

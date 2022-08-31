@@ -36,9 +36,9 @@ Usuarios.init({
     direccion: {
         type: DataTypes.STRING
     },
-    activo: {
-        type: DataTypes.BOOLEAN,
-        default: true
+    activo:{
+        type:DataTypes.BOOLEAN,
+        defaultValue:true
     },
     password: {
         type: DataTypes.STRING

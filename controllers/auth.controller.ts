@@ -9,6 +9,7 @@ import { TipoDocumento } from "../db/models/tipo_documento";
 export const getUsuarios = async (req: Request, res: Response) => {
     const usuarios = await Usuarios.findAll({
         // attributes:['nombre', 'apellido'],
+        where:{activo:1},
         include:{model:TipoDocumento}
     });
     res.json({

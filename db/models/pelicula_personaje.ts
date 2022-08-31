@@ -1,15 +1,22 @@
-const {sequelize,  DataTypes, Model} = require('../connection')
+const {sequelize, DataTypes, Model} = require('../connection')
 
-class PeliculaPersonaje extends Model{
-    declare personajeNombre:  string;
-    declare EntretenimientoTitulo:  string;
+export class PeliculaPersonaje extends Model {
+    declare PersonajeNombre: string;
+    declare entretenimientoTitulo: string;
 }
 
 PeliculaPersonaje.init({
-    
-},{
-    sequelize,
-    timestamps:false
-})
-
-export default PeliculaPersonaje;
+    PersonajeNombre: {
+        type: DataTypes.STRING,
+        primaryKey:true
+    },
+    entretenimientoTitulo: {
+        type: DataTypes.STRING,
+    }
+},   
+    {
+        sequelize,
+        tableName: 'pelicula_personaje',
+        timestamps: false
+    }
+);

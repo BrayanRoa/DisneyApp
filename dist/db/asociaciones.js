@@ -11,6 +11,10 @@ const entretenimiento_1 = __importDefault(require("./models/entretenimiento"));
 //* EL USUARIO TIENE UN TIPO DE DOC, PERO LOS TIPOS DE DOC PUEDEN TENER MUCHOS USUARIOS
 usuarios_models_1.Usuarios.belongsTo(tipo_documento_1.TipoDocumento, { foreignKey: { name: 'id_tipo_documento' } });
 tipo_documento_1.TipoDocumento.hasMany(usuarios_models_1.Usuarios, { foreignKey: { name: 'id_tipo_documento' } });
+// Entretenimiento.hasMany(Personaje)
+// Personaje.belongsTo(Entretenimiento)
+// Entretenimiento.hasMany(Genero)
+// Genero.belongsTo(Entretenimiento)
 personaje_1.Personaje.belongsToMany(entretenimiento_1.default, { through: 'pelicula_personaje' });
 entretenimiento_1.default.belongsToMany(personaje_1.Personaje, { through: 'pelicula_personaje' });
 //# sourceMappingURL=asociaciones.js.map

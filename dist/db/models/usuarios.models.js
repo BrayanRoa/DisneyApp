@@ -29,7 +29,7 @@ Usuarios.init({
     },
     activo: {
         type: DataTypes.BOOLEAN,
-        default: true
+        defaultValue: true
     },
     password: {
         type: DataTypes.STRING

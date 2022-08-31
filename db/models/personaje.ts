@@ -6,6 +6,7 @@ export class Personaje extends Model {
     declare edad: number;
     declare peso: string;
     declare historia: string;
+    // declare entretenimientoTitulo:string
 }
 
 Personaje.init({
@@ -26,8 +27,12 @@ Personaje.init({
         type: DataTypes.STRING
     },
     activo:{
-        type:DataTypes.BOOLEAN
-    }
+        type:DataTypes.BOOLEAN,
+        defaultValue:true
+    },
+    // entretenimientoTitulo:{
+    //     type:DataTypes.STRING
+    // }
 },   
     {
         sequelize,

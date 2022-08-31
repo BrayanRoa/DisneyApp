@@ -31,6 +31,7 @@ const tipo_documento_1 = require("../db/models/tipo_documento");
 const getUsuarios = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const usuarios = yield usuarios_models_1.Usuarios.findAll({
         // attributes:['nombre', 'apellido'],
+        where: { activo: 1 },
         include: { model: tipo_documento_1.TipoDocumento }
     });
     res.json({

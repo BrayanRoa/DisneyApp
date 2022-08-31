@@ -23,8 +23,12 @@ Personaje.init({
         type: DataTypes.STRING
     },
     activo: {
-        type: DataTypes.BOOLEAN
-    }
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
+    },
+    // entretenimientoTitulo:{
+    //     type:DataTypes.STRING
+    // }
 }, {
     sequelize,
     tableName: 'personaje',

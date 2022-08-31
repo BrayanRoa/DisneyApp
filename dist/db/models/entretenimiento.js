@@ -21,6 +21,10 @@ Entretenimiento.init({
     tipo: {
         type: DataTypes.STRING
     },
+    activo: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
+    }
 }, {
     sequelize,
     modelName: 'entretenimiento',
