@@ -17,6 +17,7 @@ const cors_1 = __importDefault(require("cors"));
 const usuarios_routes_1 = __importDefault(require("../routes/usuarios.routes"));
 const characters_routes_1 = __importDefault(require("../routes/characters.routes"));
 const movies_routes_1 = __importDefault(require("../routes/movies.routes"));
+const gender_routes_1 = __importDefault(require("../routes/gender.routes"));
 const { sequelize } = require('../db/connection');
 require('../db/asociaciones');
 class Server {
@@ -27,7 +28,8 @@ class Server {
             register: '/auth',
             login: '/auth/login',
             personajes: '/characters',
-            peliculas: '/movies'
+            peliculas: '/movies',
+            genero: '/genders'
         };
         this.dbConnection();
         this.middlewares();
@@ -55,6 +57,7 @@ class Server {
         this.app.use(this.rutas.register, usuarios_routes_1.default);
         this.app.use(this.rutas.personajes, characters_routes_1.default);
         this.app.use(this.rutas.peliculas, movies_routes_1.default);
+        this.app.use(this.rutas.genero, gender_routes_1.default);
     }
     listen() {
         this.app.listen(this.PORT, () => {

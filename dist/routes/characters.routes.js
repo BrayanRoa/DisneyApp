@@ -36,5 +36,11 @@ router.delete('/:nombre', [
     validarJWT_1.validarJWT,
     validar_campos_1.validarCampos
 ], characters_controller_1.deleteCharacter);
+router.post('/association', [
+    (0, express_validator_1.check)('entretenimiento', 'El campo entretenimiento es obligatorio').not().isEmpty(),
+    (0, express_validator_1.check)('personaje', 'El personaje es obligatorio').not().isEmpty(),
+    validarJWT_1.validarJWT,
+    validar_campos_1.validarCampos
+], characters_controller_1.association);
 exports.default = router;
 //# sourceMappingURL=characters.routes.js.map

@@ -4,6 +4,7 @@ import cors from "cors";
 import userRoutes from "../routes/usuarios.routes";
 import charactersRoutes from "../routes/characters.routes";
 import moviesRoutes from "../routes/movies.routes";
+import genderRoutes from "../routes/gender.routes";
 
 const { sequelize } = require('../db/connection')
 require('../db/asociaciones')
@@ -22,7 +23,8 @@ class Server{
             register:'/auth',
             login:'/auth/login',
             personajes:'/characters',
-            peliculas:'/movies'
+            peliculas:'/movies',
+            genero:'/genders'
         }
         this.dbConnection()
         this.middlewares();
@@ -49,6 +51,7 @@ class Server{
         this.app.use(this.rutas.register, userRoutes)
         this.app.use(this.rutas.personajes, charactersRoutes)
         this.app.use(this.rutas.peliculas, moviesRoutes)
+        this.app.use(this.rutas.genero, genderRoutes)
     }
 
     listen(){

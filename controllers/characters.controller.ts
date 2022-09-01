@@ -193,3 +193,28 @@ export const searchCharacter = async (req: Request, res: Response)=>{
         where:{nombre:name}
     })
 }
+
+
+export const association = async(req:Request, res:Response)=>{
+    const {entretenimiento, personaje} = req.body;
+    entretenimiento.toLowerCase();
+    personaje.toLowerCase();
+
+    const existEntertainment = await Entretenimiento.findByPk(entretenimiento);
+    const existCharcater = await Personaje.findByPk(personaje);
+
+    if(!existCharcater || !existEntertainment){
+        return res.status(400).json({
+            msg:`Personaje ${personaje} o entretenimiento ${entretenimiento} no existe`
+        })
+    }
+
+    const relationship = await PeliculaPersonaje.create({
+        PersonajeNombre: personaje,
+        entretenimientoTitulo: entretenimiento
+    })
+
+    res.status(200).json({
+        relationship
+    })
+}

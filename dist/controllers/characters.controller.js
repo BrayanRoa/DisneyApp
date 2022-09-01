@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.searchCharacter = exports.getDetailsCharacters = exports.getCharacter = exports.deleteCharacter = exports.putCharacter = exports.postCharacter = exports.getCharacters = void 0;
+exports.association = exports.searchCharacter = exports.getDetailsCharacters = exports.getCharacter = exports.deleteCharacter = exports.putCharacter = exports.postCharacter = exports.getCharacters = void 0;
 const personaje_1 = require("../db/models/personaje");
 const entretenimiento_1 = __importDefault(require("../db/models/entretenimiento"));
 const pelicula_personaje_1 = require("../db/models/pelicula_personaje");
@@ -167,4 +167,24 @@ const searchCharacter = (req, res) => __awaiter(void 0, void 0, void 0, function
     });
 });
 exports.searchCharacter = searchCharacter;
+const association = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { entretenimiento, personaje } = req.body;
+    entretenimiento.toLowerCase();
+    personaje.toLowerCase();
+    const existEntertainment = yield entretenimiento_1.default.findByPk(entretenimiento);
+    const existCharcater = yield personaje_1.Personaje.findByPk(personaje);
+    if (!existCharcater || !existEntertainment) {
+        return res.status(400).json({
+            msg: `Personaje ${personaje} o entretenimiento ${entretenimiento} no existe`
+        });
+    }
+    const relationship = yield pelicula_personaje_1.PeliculaPersonaje.create({
+        PersonajeNombre: personaje,
+        entretenimientoTitulo: entretenimiento
+    });
+    res.status(200).json({
+        relationship
+    });
+});
+exports.association = association;
 //# sourceMappingURL=characters.controller.js.map

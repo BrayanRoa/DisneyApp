@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteMovie = exports.putMovie = exports.getDetailsMovies = exports.postMovie = exports.getMovies = void 0;
 const entretenimiento_1 = __importDefault(require("../db/models/entretenimiento"));
 const personaje_1 = require("../db/models/personaje");
+const genero_1 = require("../db/models/genero");
 const getMovies = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const movies = yield entretenimiento_1.default.findAll({
         attributes: ['titulo', 'imagen', 'fecha_creacion'],
@@ -47,22 +48,37 @@ const postMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.postMovie = postMovie;
 const getDetailsMovies = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const movies = yield entretenimiento_1.default.findAll({
-        include: {
-            model: personaje_1.Personaje,
-            through: {
-                attributes: []
-            }
-        },
+    // const movies = await Entretenimiento.findAll({
+    //     include: {
+    //         model: Personaje,
+    //         through: {
+    //             attributes: []
+    //         }
+    //     },
+    //     where: { activo: 1 }
+    // });
+    const moviesTest = yield entretenimiento_1.default.findAll({
+        include: [
+            {
+                model: personaje_1.Personaje, through: {
+                    attributes: []
+                }
+            },
+            {
+                model: genero_1.Genero, through: {
+                    attributes: []
+                }
+            },
+        ],
         where: { activo: 1 }
     });
-    if (!movies) {
+    if (!moviesTest) {
         return res.status(400).json({
             msg: 'There are not movies'
         });
     }
     res.status(200).json({
-        movies
+        moviesTest
     });
 });
 exports.getDetailsMovies = getDetailsMovies;

@@ -1,6 +1,7 @@
 import Entretenimiento from '../db/models/entretenimiento';
 import { Personaje } from '../db/models/personaje';
 import { Request, Response } from 'express'
+import { Genero } from '../db/models/genero';
 
 
 
@@ -47,24 +48,41 @@ export const postMovie = async (req: Request, res: Response) => {
 
 export const getDetailsMovies = async (req: Request, res: Response) => {
 
-    const movies = await Entretenimiento.findAll({
-        include: {
-            model: Personaje,
-            through: {
-                attributes: []
-            }
-        },
+    // const movies = await Entretenimiento.findAll({
+    //     include: {
+    //         model: Personaje,
+    //         through: {
+    //             attributes: []
+    //         }
+    //     },
+    //     where: { activo: 1 }
+    // });
+
+    const moviesTest = await Entretenimiento.findAll({
+        include: [
+            {
+                model: Personaje, through: {
+                    attributes: []
+                }
+            },
+            {
+                model: Genero, through: {
+                    attributes: []
+                }
+            },
+        ],
         where: { activo: 1 }
     });
 
-    if (!movies) {
+
+    if (!moviesTest) {
         return res.status(400).json({
             msg: 'There are not movies'
         })
     }
 
     res.status(200).json({
-        movies
+        moviesTest
     })
 
 }
@@ -111,6 +129,6 @@ export const deleteMovie = async (req: Request, res: Response) => {
     )
 
     res.status(200).json({
-        msg:`successfully deleted movie`
+        msg: `successfully deleted movie`
     })
 }
