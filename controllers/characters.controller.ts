@@ -3,6 +3,7 @@ import { Personaje } from '../db/models/personaje';
 import Entretenimiento from '../db/models/entretenimiento';
 import { PeliculaPersonaje } from '../db/models/pelicula_personaje';
 
+
 //* ALL CHARACTERS
 export const getCharacters = async (req: Request, res: Response) => {
 
@@ -185,27 +186,27 @@ export const getDetailsCharacters = async (req: Request, res: Response) => {
 }
 
 
-export const searchCharacter = async (req: Request, res: Response)=>{
+export const searchCharacter = async (req: Request, res: Response) => {
 
-    const {name, age, movie} = req.query;
+    const { name, age, movie } = req.query;
 
     const character = await Personaje.findOne({
-        where:{nombre:name}
+        where: { nombre: name }
     })
 }
 
 
-export const association = async(req:Request, res:Response)=>{
-    const {entretenimiento, personaje} = req.body;
+export const association = async (req: Request, res: Response) => {
+    const { entretenimiento, personaje } = req.body;
     entretenimiento.toLowerCase();
     personaje.toLowerCase();
 
     const existEntertainment = await Entretenimiento.findByPk(entretenimiento);
     const existCharcater = await Personaje.findByPk(personaje);
 
-    if(!existCharcater || !existEntertainment){
+    if (!existCharcater || !existEntertainment) {
         return res.status(400).json({
-            msg:`Personaje ${personaje} o entretenimiento ${entretenimiento} no existe`
+            msg: `Personaje ${personaje} o entretenimiento ${entretenimiento} no existe`
         })
     }
 
@@ -217,4 +218,17 @@ export const association = async(req:Request, res:Response)=>{
     res.status(200).json({
         relationship
     })
+}
+
+export const postImage = (req: Request, res: Response) => {
+    const file = req.file?.originalname
+    
+    if (!file) {
+        const error = new Error('Please upload a file')
+        return res.json({
+            "msg":error
+        })
+    }
+
+    res.send(file)
 }

@@ -1,9 +1,26 @@
+//* IMPORTACIONES EXTERNAS
 import { Router } from "express";
-import { deleteCharacter, getCharacter, getCharacters, getDetailsCharacters, postCharacter, putCharacter, association } from '../controllers/characters.controller';
+import { check } from 'express-validator';
+
+//* IMPORTACIONES INTERNAS
+import {
+  deleteCharacter,
+  getCharacter,
+  getCharacters,
+  getDetailsCharacters,
+  postCharacter,
+  putCharacter,
+  association,
+  postImage
+} from '../controllers/characters.controller';
+
 import { validarCampos } from '../middlewares/validar_campos';
 import { validarJWT } from '../middlewares/validarJWT';
 import Usuarios from "../models/usuario";
-import { check } from 'express-validator';
+import { upload } from '../helpers/savedImage'
+import { validarExtension } from '../middlewares/validarExtension';
+
+
 const router = Router();
 
 //* MUY IMPORTANTE ESTA INTERFACE PORQUE ME PERMITE EXTENDERLA AGREGANDO MAS PROPIEDADES EN ESTE CASO A LA REQUEST 
@@ -58,5 +75,12 @@ router.post('/association', [
   validarJWT,
   validarCampos
 ], association)
+
+// router.post('/image', [
+//   upload.single('avatar'),
+//   validarExtension,
+//   validarJWT,
+//   validarCampos
+// ], postImage)
 
 export default router;

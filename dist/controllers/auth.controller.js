@@ -28,7 +28,7 @@ const usuarios_models_1 = require("../db/models/usuarios.models");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const generarJWT_1 = require("../helpers/generarJWT");
 const tipo_documento_1 = require("../db/models/tipo_documento");
-const getUsuarios = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getUsuarios = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const usuarios = yield usuarios_models_1.Usuarios.findAll({
         // attributes:['nombre', 'apellido'],
         where: { activo: 1 },
@@ -95,7 +95,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
         if (!(usuario === null || usuario === void 0 ? void 0 : usuario.activo)) {
             return res.status(400).json({
-                msg: `Usuario inactivo hable con el administrador`
+                msg: 'Usuario inactivo hable con el administrador'
             });
         }
         const token = yield (0, generarJWT_1.generarJWT)(usuario === null || usuario === void 0 ? void 0 : usuario.documento);

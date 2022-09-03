@@ -12,7 +12,4 @@ const validarCampos = (req, res, next) => {
     next();
 };
 exports.validarCampos = validarCampos;
-// module.exports = {
-// 	validarCampos
-// };
 //# sourceMappingURL=validar_campos.js.map

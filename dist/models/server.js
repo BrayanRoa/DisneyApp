@@ -14,10 +14,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
+// const upload = multer({ dest: 'uploads/' })
+// import fileUpload from "express-fileupload";
 const usuarios_routes_1 = __importDefault(require("../routes/usuarios.routes"));
 const characters_routes_1 = __importDefault(require("../routes/characters.routes"));
 const movies_routes_1 = __importDefault(require("../routes/movies.routes"));
 const gender_routes_1 = __importDefault(require("../routes/gender.routes"));
+const uploadImage_routes_1 = __importDefault(require("../routes/uploadImage.routes"));
 const { sequelize } = require('../db/connection');
 require('../db/asociaciones');
 class Server {
@@ -29,8 +32,10 @@ class Server {
             login: '/auth/login',
             personajes: '/characters',
             peliculas: '/movies',
-            genero: '/genders'
+            genero: '/genders',
+            images: '/uploads'
         };
+        // this.diskStorage();
         this.dbConnection();
         this.middlewares();
         this.routes();
@@ -52,12 +57,17 @@ class Server {
         this.app.use((0, cors_1.default)());
         this.app.use(express_1.default.json());
         this.app.use(express_1.default.static('public'));
+        // this.app.use(fileUpload({
+        //     useTempFiles: true,
+        //     tempFileDir: '/tmp/'
+        // }));
     }
     routes() {
         this.app.use(this.rutas.register, usuarios_routes_1.default);
         this.app.use(this.rutas.personajes, characters_routes_1.default);
         this.app.use(this.rutas.peliculas, movies_routes_1.default);
         this.app.use(this.rutas.genero, gender_routes_1.default);
+        this.app.use(this.rutas.images, uploadImage_routes_1.default);
     }
     listen() {
         this.app.listen(this.PORT, () => {

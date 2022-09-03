@@ -1,10 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+//* IMPORTACIONES EXTERNAS
 const express_1 = require("express");
+const express_validator_1 = require("express-validator");
+//* IMPORTACIONES INTERNAS
 const characters_controller_1 = require("../controllers/characters.controller");
 const validar_campos_1 = require("../middlewares/validar_campos");
 const validarJWT_1 = require("../middlewares/validarJWT");
-const express_validator_1 = require("express-validator");
 const router = (0, express_1.Router)();
 router.get('/', [
     validarJWT_1.validarJWT,
@@ -42,5 +44,11 @@ router.post('/association', [
     validarJWT_1.validarJWT,
     validar_campos_1.validarCampos
 ], characters_controller_1.association);
+// router.post('/image', [
+//   upload.single('avatar'),
+//   validarExtension,
+//   validarJWT,
+//   validarCampos
+// ], postImage)
 exports.default = router;
 //# sourceMappingURL=characters.routes.js.map

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.association = exports.searchCharacter = exports.getDetailsCharacters = exports.getCharacter = exports.deleteCharacter = exports.putCharacter = exports.postCharacter = exports.getCharacters = void 0;
+exports.postImage = exports.association = exports.searchCharacter = exports.getDetailsCharacters = exports.getCharacter = exports.deleteCharacter = exports.putCharacter = exports.postCharacter = exports.getCharacters = void 0;
 const personaje_1 = require("../db/models/personaje");
 const entretenimiento_1 = __importDefault(require("../db/models/entretenimiento"));
 const pelicula_personaje_1 = require("../db/models/pelicula_personaje");
@@ -187,4 +187,16 @@ const association = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     });
 });
 exports.association = association;
+const postImage = (req, res) => {
+    var _a;
+    const file = (_a = req.file) === null || _a === void 0 ? void 0 : _a.originalname;
+    if (!file) {
+        const error = new Error('Please upload a file');
+        return res.json({
+            "msg": error
+        });
+    }
+    res.send(file);
+};
+exports.postImage = postImage;
 //# sourceMappingURL=characters.controller.js.map
