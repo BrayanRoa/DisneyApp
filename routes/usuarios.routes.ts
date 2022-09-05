@@ -15,7 +15,7 @@ router.post('/register',[
     check('apellido', 'El apellido es obligatorio').not().isEmpty(),
     check('telefono', 'El telefono es obligatorio y debe tener 10 digitos').isLength({min:10, max:10}),
     check('correo', 'El correo es obligatorio').isEmail(),
-    // check('tipoDocumentoid', 'El tipo de documento es obligatorio').not().isEmpty(),
+    check('id_tipo_documento', 'El tipo de documento es obligatorio').not().isEmpty(),
     check('password', 'El password debe ser de minimo 6 caracteres').isLength({min:6}),
     validarCampos
 ], register);

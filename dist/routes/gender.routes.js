@@ -16,6 +16,5 @@ router.post('/', [
     validarJWT_1.validarJWT,
     validar_campos_1.validarCampos
 ], gender_controller_1.postGender);
-router.post('/prueba', gender_controller_1.prueba);
 exports.default = router;
 //# sourceMappingURL=gender.routes.js.map

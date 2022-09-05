@@ -44,11 +44,5 @@ router.post('/association', [
     validarJWT_1.validarJWT,
     validar_campos_1.validarCampos
 ], characters_controller_1.association);
-// router.post('/image', [
-//   upload.single('avatar'),
-//   validarExtension,
-//   validarJWT,
-//   validarCampos
-// ], postImage)
 exports.default = router;
 //# sourceMappingURL=characters.routes.js.map

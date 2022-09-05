@@ -9,6 +9,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const server_1 = __importDefault(require("./models/server"));
 //* CONFIGURAR VARIABLES DE ENTORNO
 dotenv_1.default.config();
+console.log(process.env.API_KEY_SEND_GRID);
 const server = new server_1.default();
 server.listen();
 //# sourceMappingURL=app.js.map

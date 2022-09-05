@@ -3,7 +3,7 @@ import { validarCampos } from '../middlewares/validar_campos';
 import { validarJWT } from '../middlewares/validarJWT';
 
 import { check } from 'express-validator';
-import { getGenders, postGender, prueba } from '../controllers/gender.controller';
+import { getGenders, postGender } from '../controllers/gender.controller';
 
 
 const router = Router();
@@ -19,7 +19,5 @@ router.post('/', [
     validarJWT,
     validarCampos
 ], postGender)
-
-router.post('/prueba', prueba)
 
 export default router;

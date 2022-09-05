@@ -76,11 +76,4 @@ router.post('/association', [
   validarCampos
 ], association)
 
-// router.post('/image', [
-//   upload.single('avatar'),
-//   validarExtension,
-//   validarJWT,
-//   validarCampos
-// ], postImage)
-
 export default router;

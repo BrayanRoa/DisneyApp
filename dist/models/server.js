@@ -14,8 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
-// const upload = multer({ dest: 'uploads/' })
-// import fileUpload from "express-fileupload";
 const usuarios_routes_1 = __importDefault(require("../routes/usuarios.routes"));
 const characters_routes_1 = __importDefault(require("../routes/characters.routes"));
 const movies_routes_1 = __importDefault(require("../routes/movies.routes"));
@@ -35,7 +33,6 @@ class Server {
             genero: '/genders',
             images: '/uploads'
         };
-        // this.diskStorage();
         this.dbConnection();
         this.middlewares();
         this.routes();
@@ -57,10 +54,6 @@ class Server {
         this.app.use((0, cors_1.default)());
         this.app.use(express_1.default.json());
         this.app.use(express_1.default.static('public'));
-        // this.app.use(fileUpload({
-        //     useTempFiles: true,
-        //     tempFileDir: '/tmp/'
-        // }));
     }
     routes() {
         this.app.use(this.rutas.register, usuarios_routes_1.default);

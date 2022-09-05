@@ -1,10 +1,5 @@
 import express, { Application } from "express";
 import cors from "cors";
-import multer from 'multer'
-// const upload = multer({ dest: 'uploads/' })
-
-// import fileUpload from "express-fileupload";
-
 
 import userRoutes from "../routes/usuarios.routes";
 import charactersRoutes from "../routes/characters.routes";
@@ -33,7 +28,6 @@ class Server {
             genero: '/genders',
             images:'/uploads'
         }
-        // this.diskStorage();
         this.dbConnection()
         this.middlewares();
         this.routes();
@@ -54,11 +48,6 @@ class Server {
         this.app.use(cors())
         this.app.use(express.json())
         this.app.use(express.static('public'));
-        // this.app.use(fileUpload({
-        //     useTempFiles: true,
-        //     tempFileDir: '/tmp/'
-        // }));
-
     }
 
     routes() {
@@ -75,21 +64,6 @@ class Server {
         })
     }
 
-    // diskStorage(){
-    //     const storage = multer.diskStorage({
-    //         destination: function (req, file, cb) {
-    //           cb(null, 'uploads/')
-    //         },
-    //         filename: function (req, file, cb) {
-                
-    //           cb(null, `${Date.now()}-${file.originalname}`)
-    //         }
-    //       })
-          
-    //       const upload = multer({ storage: storage })
-    // }
-
-    
 }
 
 

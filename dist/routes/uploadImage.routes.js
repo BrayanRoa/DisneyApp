@@ -7,7 +7,6 @@ const validarExtension_1 = require("../middlewares/validarExtension");
 const validarJWT_1 = require("../middlewares/validarJWT");
 const validar_campos_1 = require("../middlewares/validar_campos");
 const router = (0, express_1.Router)();
-// router.post('/:coleccion/:nombre');
 router.post('/:coleccion/:nombre', [
     savedImage_1.upload.single('file'),
     validarExtension_1.validarExtension,

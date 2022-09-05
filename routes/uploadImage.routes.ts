@@ -7,7 +7,6 @@ import { validarCampos } from '../middlewares/validar_campos';
 
 const router = Router();
 
-// router.post('/:coleccion/:nombre');
 
 router.post('/:coleccion/:nombre', [
     upload.single('file'),

@@ -1,8 +1,11 @@
 import { Request, Response } from 'express'
-import { Usuarios } from '../db/models/usuarios.models'
 import bcrypt from 'bcrypt'
 import { generarJWT } from '../helpers/generarJWT'
+import sgMail from "../helpers/mailer";
+
 import { TipoDocumento } from '../db/models/tipo_documento'
+import { Usuarios } from '../db/models/usuarios.models'
+
 
 export const getUsuarios = async (_req: Request, res: Response) => {
   const usuarios = await Usuarios.findAll({
@@ -14,6 +17,7 @@ export const getUsuarios = async (_req: Request, res: Response) => {
     usuarios
   })
 }
+
 
 export const getUsuario = async (req: Request, res: Response) => {
   const { id } = req.params
@@ -31,6 +35,7 @@ export const getUsuario = async (req: Request, res: Response) => {
   })
 }
 
+
 export const register = async (req: Request, res: Response) => {
   const { password, ...usuario } = req.body
 
@@ -47,6 +52,29 @@ export const register = async (req: Request, res: Response) => {
     const sal = bcrypt.genSaltSync()
     usuario.password = bcrypt.hashSync(password, sal)
 
+    const msg = {
+      to: usuario.correo, // Change to your recipient
+      from: process.env.EMAIL!, // Change to your verified sender
+      subject: 'Disney Rest API',
+      text: `Hi ${usuario.nombre}`,
+      html: `
+        <h1>Welcome to DISNEY RET API</h1>
+        <strong>thanks for using our disneyRest API</strong>
+        ${usuario.nombre} ${usuario.apellido} hope you're well
+        `,
+    }
+
+    await sgMail
+      .send(msg)
+      .then((response) => {
+        console.log(response[0].statusCode)
+        console.log(response[0].headers)
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+
+
     //* GUARDO EN BASE DE DATOS
     await Usuarios.create(usuario)
 
@@ -56,10 +84,11 @@ export const register = async (req: Request, res: Response) => {
   } catch (error) {
     console.log(error)
     res.status(500).json({
-      msg: 'Hable con el administrador'
+      error: error
     })
   }
 }
+
 
 export const login = async (req: Request, res: Response) => {
   const { documento, password } = req.body
@@ -90,10 +119,12 @@ export const login = async (req: Request, res: Response) => {
       usuario,
       token
     })
+
   } catch (error) {
     console.log(error)
     res.json({
-      msg: 'hable con el administrador'
+      msg: 'hable con el administrador',
+      error
     })
   }
 }

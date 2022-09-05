@@ -24,10 +24,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.login = exports.register = exports.getUsuario = exports.getUsuarios = void 0;
-const usuarios_models_1 = require("../db/models/usuarios.models");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const generarJWT_1 = require("../helpers/generarJWT");
+const mailer_1 = __importDefault(require("../helpers/mailer"));
 const tipo_documento_1 = require("../db/models/tipo_documento");
+const usuarios_models_1 = require("../db/models/usuarios.models");
 const getUsuarios = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const usuarios = yield usuarios_models_1.Usuarios.findAll({
         // attributes:['nombre', 'apellido'],
@@ -65,6 +66,26 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         //* ENCRIPTO CONTRASEÑA
         const sal = bcrypt_1.default.genSaltSync();
         usuario.password = bcrypt_1.default.hashSync(password, sal);
+        const msg = {
+            to: usuario.correo,
+            from: process.env.EMAIL,
+            subject: 'Disney Rest API',
+            text: `Hi ${usuario.nombre}`,
+            html: `
+        <h1>Welcome to DISNEY RET API</h1>
+        <strong>thanks for using our disneyRest API</strong>
+        ${usuario.nombre} ${usuario.apellido} hope you're well
+        `,
+        };
+        yield mailer_1.default
+            .send(msg)
+            .then((response) => {
+            console.log(response[0].statusCode);
+            console.log(response[0].headers);
+        })
+            .catch((error) => {
+            console.error(error);
+        });
         //* GUARDO EN BASE DE DATOS
         yield usuarios_models_1.Usuarios.create(usuario);
         res.json({
@@ -74,7 +95,7 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     catch (error) {
         console.log(error);
         res.status(500).json({
-            msg: 'Hable con el administrador'
+            error: error
         });
     }
 });
@@ -107,7 +128,8 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     catch (error) {
         console.log(error);
         res.json({
-            msg: 'hable con el administrador'
+            msg: 'hable con el administrador',
+            error
         });
     }
 });
