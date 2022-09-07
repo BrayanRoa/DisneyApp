@@ -12,37 +12,44 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.postImage = exports.association = exports.searchCharacter = exports.getDetailsCharacters = exports.getCharacter = exports.deleteCharacter = exports.putCharacter = exports.postCharacter = exports.getCharacters = void 0;
+exports.association = exports.getDetailsCharacters = exports.getCharacter = exports.deleteCharacter = exports.putCharacter = exports.postCharacter = exports.getCharacters = void 0;
 const personaje_1 = require("../db/models/personaje");
 const entretenimiento_1 = __importDefault(require("../db/models/entretenimiento"));
 const pelicula_personaje_1 = require("../db/models/pelicula_personaje");
 //* ALL CHARACTERS
 const getCharacters = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const personajes = yield personaje_1.Personaje.findAll({
-        attributes: ['nombre', 'imagen'],
-        where: { activo: 1 }
-    });
-    if (!personajes) {
-        return res.status(400).json({
-            msg: 'No hay personajes aún'
+    try {
+        const personajes = yield personaje_1.Personaje.findAll({
+            attributes: ['nombre', 'imagen'],
+            where: { activo: 1 }
+        });
+        if (!personajes) {
+            return res.status(400).json({
+                msg: 'No hay personajes aún'
+            });
+        }
+        res.status(200).json({
+            personajes
         });
     }
-    res.status(200).json({
-        personajes
-    });
+    catch (error) {
+        res.status(400).json({
+            error
+        });
+    }
 });
 exports.getCharacters = getCharacters;
 //* CREATE CHARACTER
 const postCharacter = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const nameMovie = req.query.titulo || '';
-    const movie = yield entretenimiento_1.default.findByPk(nameMovie);
-    if (!movie) {
-        return res.status(400).json({
-            msg: `No existe una pelicula con nombre ${nameMovie} - debes crearla primero para agregar personajes`
-        });
-    }
-    const { nombre, imagen, edad, peso, historia, entretenimientoTitulo } = req.body;
+    const { nombre, edad, peso, historia, entretenimientoTitulo } = req.body;
     try {
+        const movie = yield entretenimiento_1.default.findByPk(nameMovie);
+        if (!movie) {
+            return res.status(400).json({
+                msg: `No existe una pelicula con nombre ${nameMovie} - debes crearla primero para agregar personajes`
+            });
+        }
         //* VALIDO SI ESE PERSONAJE YA EXISTE EN BD
         const existe = yield personaje_1.Personaje.findByPk(nombre);
         if (existe) {
@@ -52,7 +59,12 @@ const postCharacter = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         }
         nombre.toLowerCase();
         const personaje = yield personaje_1.Personaje.create({
-            nombre, imagen, edad, peso, historia, entretenimientoTitulo
+            nombre,
+            imagen: 'https://res.cloudinary.com/dmaqkkeno/image/upload/v1662502752/png-transparent-the-walt-disney-company-business-logo-sign-21st-century-fox-business-text-people-logo_bax2s0.png',
+            edad,
+            peso,
+            historia,
+            entretenimientoTitulo
         });
         const association = yield pelicula_personaje_1.PeliculaPersonaje.create({
             PersonajeNombre: nombre,
@@ -75,38 +87,52 @@ exports.postCharacter = postCharacter;
 const putCharacter = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { nombre } = req.params;
     const { imagen, peso, historia, edad } = req.body;
-    const existe = yield personaje_1.Personaje.findByPk(nombre.toLowerCase());
-    if (!existe) {
-        return res.status(400).json({
-            msg: `El personaje ${nombre} no existe`
+    try {
+        const existe = yield personaje_1.Personaje.findByPk(nombre.toLowerCase());
+        if (!existe) {
+            return res.status(400).json({
+                msg: `El personaje ${nombre} no existe`
+            });
+        }
+        const personaje = yield personaje_1.Personaje.update({ imagen, peso, historia, edad }, { where: { nombre } });
+        res.status(200).json({
+            personaje
         });
     }
-    const personaje = yield personaje_1.Personaje.update({ imagen, peso, historia, edad }, { where: { nombre } });
-    res.status(200).json({
-        personaje
-    });
+    catch (error) {
+        res.status(400).json({
+            error
+        });
+    }
 });
 exports.putCharacter = putCharacter;
-//* UPDATE ONE CHARACTER
+//* DELETE ONE CHARACTER
 const deleteCharacter = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { nombre } = req.params;
-    const existe = yield personaje_1.Personaje.findByPk(nombre.toLowerCase());
-    if (!existe) {
-        return res.status(400).json({
-            msg: `El personaje ${nombre} no existe`
+    try {
+        const existe = yield personaje_1.Personaje.findByPk(nombre.toLowerCase());
+        if (!existe) {
+            return res.status(400).json({
+                msg: `El personaje ${nombre} no existe`
+            });
+        }
+        const personaje = yield personaje_1.Personaje.update({ activo: 0 }, { where: { nombre } });
+        res.status(200).json({
+            personaje
         });
     }
-    const personaje = yield personaje_1.Personaje.update({ activo: 0 }, { where: { nombre } });
-    res.status(200).json({
-        personaje
-    });
+    catch (error) {
+        res.status(400).json({
+            error
+        });
+    }
 });
 exports.deleteCharacter = deleteCharacter;
 //* GET ONE CHARACTER
 const getCharacter = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req.params.nombre);
+    let character;
     try {
-        const personaje = yield personaje_1.Personaje.findByPk(req.params.nombre, {
+        character = yield personaje_1.Personaje.findByPk(req.params.nombre, {
             include: {
                 model: entretenimiento_1.default,
                 through: {
@@ -114,13 +140,13 @@ const getCharacter = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 }
             }
         });
-        if (!personaje) {
+        if (!character) {
             return res.status(400).json({
                 msg: 'No hay personajes aún'
             });
         }
         res.status(200).json({
-            personaje
+            character
         });
     }
     catch (error) {
@@ -160,43 +186,42 @@ const getDetailsCharacters = (req, res) => __awaiter(void 0, void 0, void 0, fun
     }
 });
 exports.getDetailsCharacters = getDetailsCharacters;
-const searchCharacter = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { name, age, movie } = req.query;
-    const character = yield personaje_1.Personaje.findOne({
-        where: { nombre: name }
-    });
-});
-exports.searchCharacter = searchCharacter;
 const association = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { entretenimiento, personaje } = req.body;
     entretenimiento.toLowerCase();
     personaje.toLowerCase();
-    const existEntertainment = yield entretenimiento_1.default.findByPk(entretenimiento);
-    const existCharcater = yield personaje_1.Personaje.findByPk(personaje);
-    if (!existCharcater || !existEntertainment) {
-        return res.status(400).json({
-            msg: `Personaje ${personaje} o entretenimiento ${entretenimiento} no existe`
+    try {
+        const existAssoiation = yield pelicula_personaje_1.PeliculaPersonaje.findOne({
+            where: {
+                PersonajeNombre: personaje,
+                entretenimientoTitulo: entretenimiento
+            }
+        });
+        if (existAssoiation) {
+            return res.json({
+                msg: `Ya se encuentra relacionado el entretenimiento ${entretenimiento} con el personaje ${personaje}`
+            });
+        }
+        const existEntertainment = yield entretenimiento_1.default.findByPk(entretenimiento);
+        const existCharcater = yield personaje_1.Personaje.findByPk(personaje);
+        if (!existCharcater || !existEntertainment) {
+            return res.status(400).json({
+                msg: `Personaje ${personaje} o entretenimiento ${entretenimiento} no existe`
+            });
+        }
+        const relationship = yield pelicula_personaje_1.PeliculaPersonaje.create({
+            PersonajeNombre: personaje,
+            entretenimientoTitulo: entretenimiento
+        });
+        res.status(200).json({
+            relationship
         });
     }
-    const relationship = yield pelicula_personaje_1.PeliculaPersonaje.create({
-        PersonajeNombre: personaje,
-        entretenimientoTitulo: entretenimiento
-    });
-    res.status(200).json({
-        relationship
-    });
+    catch (error) {
+        res.status(400).json({
+            error
+        });
+    }
 });
 exports.association = association;
-const postImage = (req, res) => {
-    var _a;
-    const file = (_a = req.file) === null || _a === void 0 ? void 0 : _a.originalname;
-    if (!file) {
-        const error = new Error('Please upload a file');
-        return res.json({
-            "msg": error
-        });
-    }
-    res.send(file);
-};
-exports.postImage = postImage;
 //# sourceMappingURL=characters.controller.js.map

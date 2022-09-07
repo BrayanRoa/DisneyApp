@@ -26,7 +26,7 @@ export const getMovies = async (req: Request, res: Response) => {
 
 export const postMovie = async (req: Request, res: Response) => {
 
-    const { titulo, imagen, fecha_creacion, calificacion, tipo } = req.body
+    const { titulo, fecha_creacion, calificacion, tipo } = req.body
 
     const existe = await Entretenimiento.findByPk(titulo.toLowerCase())
 
@@ -37,7 +37,11 @@ export const postMovie = async (req: Request, res: Response) => {
     }
 
     const movies = await Entretenimiento.create({
-        titulo, imagen, fecha_creacion, calificacion, tipo
+        titulo,
+        imagen: 'https://res.cloudinary.com/dmaqkkeno/image/upload/v1662502429/disneyplus-1024x577_ni47yj.jpg',
+        fecha_creacion, 
+        calificacion, 
+        tipo
     });
 
     res.status(200).json({
@@ -47,16 +51,6 @@ export const postMovie = async (req: Request, res: Response) => {
 }
 
 export const getDetailsMovies = async (req: Request, res: Response) => {
-
-    // const movies = await Entretenimiento.findAll({
-    //     include: {
-    //         model: Personaje,
-    //         through: {
-    //             attributes: []
-    //         }
-    //     },
-    //     where: { activo: 1 }
-    // });
 
     const moviesTest = await Entretenimiento.findAll({
         include: [
@@ -99,14 +93,14 @@ export const putMovie = async (req: Request, res: Response) => {
         })
     }
 
-    const { imagen, fecha_creacion, calificion, tipo } = req.body;
-
-    await Entretenimiento.update(
-        { imagen, fecha_creacion, calificion, tipo },
+    const { fecha_creacion, calificacion, tipo } = req.body;
+    const update = await Entretenimiento.update(
+        { fecha_creacion, calificacion, tipo },
         { where: { titulo: nombre } }
     );
 
     res.status(200).json({
+        update,
         msg: `successfully updated movie`
     })
 }

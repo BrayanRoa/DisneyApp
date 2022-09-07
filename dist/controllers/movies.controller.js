@@ -32,7 +32,7 @@ const getMovies = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getMovies = getMovies;
 const postMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { titulo, imagen, fecha_creacion, calificacion, tipo } = req.body;
+    const { titulo, fecha_creacion, calificacion, tipo } = req.body;
     const existe = yield entretenimiento_1.default.findByPk(titulo.toLowerCase());
     if (existe) {
         return res.status(400).json({
@@ -40,7 +40,11 @@ const postMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
     }
     const movies = yield entretenimiento_1.default.create({
-        titulo, imagen, fecha_creacion, calificacion, tipo
+        titulo,
+        imagen: 'https://res.cloudinary.com/dmaqkkeno/image/upload/v1662502429/disneyplus-1024x577_ni47yj.jpg',
+        fecha_creacion,
+        calificacion,
+        tipo
     });
     res.status(200).json({
         movies
@@ -48,15 +52,6 @@ const postMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.postMovie = postMovie;
 const getDetailsMovies = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // const movies = await Entretenimiento.findAll({
-    //     include: {
-    //         model: Personaje,
-    //         through: {
-    //             attributes: []
-    //         }
-    //     },
-    //     where: { activo: 1 }
-    // });
     const moviesTest = yield entretenimiento_1.default.findAll({
         include: [
             {
@@ -90,9 +85,10 @@ const putMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             msg: `The movie or serie does not exist`
         });
     }
-    const { imagen, fecha_creacion, calificion, tipo } = req.body;
-    yield entretenimiento_1.default.update({ imagen, fecha_creacion, calificion, tipo }, { where: { titulo: nombre } });
+    const { fecha_creacion, calificacion, tipo } = req.body;
+    const update = yield entretenimiento_1.default.update({ fecha_creacion, calificacion, tipo }, { where: { titulo: nombre } });
     res.status(200).json({
+        update,
         msg: `successfully updated movie`
     });
 });

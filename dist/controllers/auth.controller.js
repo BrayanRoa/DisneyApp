@@ -30,27 +30,41 @@ const mailer_1 = __importDefault(require("../helpers/mailer"));
 const tipo_documento_1 = require("../db/models/tipo_documento");
 const usuarios_models_1 = require("../db/models/usuarios.models");
 const getUsuarios = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const usuarios = yield usuarios_models_1.Usuarios.findAll({
-        // attributes:['nombre', 'apellido'],
-        where: { activo: 1 },
-        include: { model: tipo_documento_1.TipoDocumento }
-    });
-    res.json({
-        usuarios
-    });
+    try {
+        const usuarios = yield usuarios_models_1.Usuarios.findAll({
+            // attributes:['nombre', 'apellido'],
+            where: { activo: 1 },
+            include: { model: tipo_documento_1.TipoDocumento }
+        });
+        res.json({
+            usuarios
+        });
+    }
+    catch (error) {
+        res.status(400).json({
+            error
+        });
+    }
 });
 exports.getUsuarios = getUsuarios;
 const getUsuario = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const usuario = yield usuarios_models_1.Usuarios.findByPk(id);
-    if (!usuario) {
-        return res.status(404).json({
-            msg: `No existe usuario con id ${id}`
+    try {
+        const usuario = yield usuarios_models_1.Usuarios.findByPk(id);
+        if (!usuario) {
+            return res.status(404).json({
+                msg: `No existe usuario con id ${id}`
+            });
+        }
+        res.json({
+            usuario
         });
     }
-    res.json({
-        usuario
-    });
+    catch (error) {
+        res.status(400).json({
+            error
+        });
+    }
 });
 exports.getUsuario = getUsuario;
 const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -72,7 +86,7 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             subject: 'Disney Rest API',
             text: `Hi ${usuario.nombre}`,
             html: `
-        <h1>Welcome to DISNEY RET API</h1>
+        <h1>Welcome to DISNEY REST API</h1>
         <strong>thanks for using our disneyRest API</strong>
         ${usuario.nombre} ${usuario.apellido} hope you're well
         `,

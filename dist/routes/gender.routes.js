@@ -12,7 +12,7 @@ router.get('/', [
 ], gender_controller_1.getGenders);
 router.post('/', [
     (0, express_validator_1.check)('nombre', 'El nombre del genero es obligatorio').not().isEmpty(),
-    (0, express_validator_1.check)('imagen').not().isEmpty(),
+    // check('imagen').not().isEmpty(),
     validarJWT_1.validarJWT,
     validar_campos_1.validarCampos
 ], gender_controller_1.postGender);

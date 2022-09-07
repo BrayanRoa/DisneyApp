@@ -19,7 +19,6 @@ router.get('/details', [
 
 router.post('/', [
     check('titulo', 'El titulo del entretenimiento es obligatorio').not().isEmpty(),
-    check('imagen', 'La url de la imagen es obligatoria').not().isEmpty(),
     check('fecha_creacion', 'La fecha es obligatoria').not().isEmpty(),
     check('calificacion', 'La calificación es obligatorio').not().isEmpty(),
     check('tipo', 'El tipo pelicula/serie es obligatoria').not().isEmpty(),
@@ -29,7 +28,6 @@ router.post('/', [
 
 
 router.put('/:nombre', [
-    check('imagen', 'La url de la imagen es obligatoria').not().isEmpty(),
     check('fecha_creacion', 'La fecha es obligatoria').not().isEmpty(),
     check('calificacion', 'La calificación es obligatorio').not().isEmpty(),
     check('tipo', 'El tipo pelicula/serie es obligatoria').not().isEmpty(),

@@ -8,31 +8,48 @@ import { Usuarios } from '../db/models/usuarios.models'
 
 
 export const getUsuarios = async (_req: Request, res: Response) => {
-  const usuarios = await Usuarios.findAll({
-    // attributes:['nombre', 'apellido'],
-    where: { activo: 1 },
-    include: { model: TipoDocumento }
-  })
-  res.json({
-    usuarios
-  })
+
+  try {
+    const usuarios = await Usuarios.findAll({
+      // attributes:['nombre', 'apellido'],
+      where: { activo: 1 },
+      include: { model: TipoDocumento }
+    })
+    res.json({
+      usuarios
+    })
+
+  } catch (error) {
+    res.status(400).json({
+      error
+    })
+  }
+
 }
 
 
 export const getUsuario = async (req: Request, res: Response) => {
   const { id } = req.params
 
-  const usuario = await Usuarios.findByPk(id)
+  try {
+    const usuario = await Usuarios.findByPk(id)
 
-  if (!usuario) {
-    return res.status(404).json({
-      msg: `No existe usuario con id ${id}`
+    if (!usuario) {
+      return res.status(404).json({
+        msg: `No existe usuario con id ${id}`
+      })
+    }
+
+    res.json({
+      usuario
+    })
+
+  } catch (error) {
+    res.status(400).json({
+      error
     })
   }
 
-  res.json({
-    usuario
-  })
 }
 
 
@@ -58,7 +75,7 @@ export const register = async (req: Request, res: Response) => {
       subject: 'Disney Rest API',
       text: `Hi ${usuario.nombre}`,
       html: `
-        <h1>Welcome to DISNEY RET API</h1>
+        <h1>Welcome to DISNEY REST API</h1>
         <strong>thanks for using our disneyRest API</strong>
         ${usuario.nombre} ${usuario.apellido} hope you're well
         `,
@@ -81,6 +98,7 @@ export const register = async (req: Request, res: Response) => {
     res.json({
       usuario
     })
+
   } catch (error) {
     console.log(error)
     res.status(500).json({

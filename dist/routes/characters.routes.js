@@ -22,15 +22,16 @@ router.get('/details', [
 ], characters_controller_1.getDetailsCharacters);
 router.post('/', [
     (0, express_validator_1.check)('nombre', 'El nombre del personaje es obligatorio').not().isEmpty(),
-    (0, express_validator_1.check)('imagen', 'La url de la imagen es obligatoria').not().isEmpty(),
     (0, express_validator_1.check)('edad', 'La edad es obligatoria').not().isEmpty(),
     (0, express_validator_1.check)('peso', 'El peso es obligatorio').not().isEmpty(),
     (0, express_validator_1.check)('historia', 'La historia es obligatoria').not().isEmpty(),
-    // check('entretenimientoTitulo', 'Debe agregarle la pelicula o la seria').not().isEmpty(),
     validarJWT_1.validarJWT,
     validar_campos_1.validarCampos
 ], characters_controller_1.postCharacter);
 router.put('/:nombre', [
+    (0, express_validator_1.check)('edad', 'La edad es obligatoria').not().isEmpty(),
+    (0, express_validator_1.check)('peso', 'El peso es obligatorio').not().isEmpty(),
+    (0, express_validator_1.check)('historia', 'La historia es obligatoria').not().isEmpty(),
     validarJWT_1.validarJWT,
     validar_campos_1.validarCampos
 ], characters_controller_1.putCharacter);

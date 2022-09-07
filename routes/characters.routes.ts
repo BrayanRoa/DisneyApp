@@ -10,15 +10,13 @@ import {
   getDetailsCharacters,
   postCharacter,
   putCharacter,
-  association,
-  postImage
+  association
 } from '../controllers/characters.controller';
 
 import { validarCampos } from '../middlewares/validar_campos';
 import { validarJWT } from '../middlewares/validarJWT';
 import Usuarios from "../models/usuario";
-import { upload } from '../helpers/savedImage'
-import { validarExtension } from '../middlewares/validarExtension';
+
 
 
 const router = Router();
@@ -50,16 +48,17 @@ router.get('/details', [
 
 router.post('/', [
   check('nombre', 'El nombre del personaje es obligatorio').not().isEmpty(),
-  check('imagen', 'La url de la imagen es obligatoria').not().isEmpty(),
   check('edad', 'La edad es obligatoria').not().isEmpty(),
   check('peso', 'El peso es obligatorio').not().isEmpty(),
   check('historia', 'La historia es obligatoria').not().isEmpty(),
-  // check('entretenimientoTitulo', 'Debe agregarle la pelicula o la seria').not().isEmpty(),
   validarJWT,
   validarCampos
 ], postCharacter)
 
 router.put('/:nombre', [
+  check('edad', 'La edad es obligatoria').not().isEmpty(),
+  check('peso', 'El peso es obligatorio').not().isEmpty(),
+  check('historia', 'La historia es obligatoria').not().isEmpty(),
   validarJWT,
   validarCampos
 ], putCharacter)
@@ -75,5 +74,6 @@ router.post('/association', [
   validarJWT,
   validarCampos
 ], association)
+
 
 export default router;

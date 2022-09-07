@@ -1,12 +1,11 @@
 import { Router } from 'express'
-import { getImage, uploadImage, uploadImageCloudinary } from '../controllers/uploadImage.controller';
+import { uploadImage, uploadImageCloudinary } from '../controllers/uploadImage.controller';
 import { upload } from '../helpers/savedImage';
 import { validarExtension } from '../middlewares/validarExtension';
 import { validarJWT } from '../middlewares/validarJWT';
 import { validarCampos } from '../middlewares/validar_campos';
 
 const router = Router();
-
 
 router.post('/:coleccion/:nombre', [
     upload.single('file'),
@@ -16,9 +15,9 @@ router.post('/:coleccion/:nombre', [
 ], uploadImageCloudinary)
 // ], uploadImage)
 
-router.get('/:coleccion/:nombre',[
-    validarJWT,
-    validarCampos
-], getImage)
+// router.get('/:coleccion/:nombre',[
+//     validarJWT,
+//     validarCampos
+// ], getImage)
 
 export default router;

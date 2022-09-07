@@ -15,7 +15,7 @@ router.get('/', [
 
 router.post('/', [
     check('nombre', 'El nombre del genero es obligatorio').not().isEmpty(),
-    check('imagen').not().isEmpty(),
+    // check('imagen').not().isEmpty(),
     validarJWT,
     validarCampos
 ], postGender)

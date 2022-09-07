@@ -14,9 +14,9 @@ router.post('/:coleccion/:nombre', [
     validar_campos_1.validarCampos
 ], uploadImage_controller_1.uploadImageCloudinary);
 // ], uploadImage)
-router.get('/:coleccion/:nombre', [
-    validarJWT_1.validarJWT,
-    validar_campos_1.validarCampos
-], uploadImage_controller_1.getImage);
+// router.get('/:coleccion/:nombre',[
+//     validarJWT,
+//     validarCampos
+// ], getImage)
 exports.default = router;
 //# sourceMappingURL=uploadImage.routes.js.map
